@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hr_attendance_passkey_log_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.passkey.log.tree</field>
+            <field name="model">hr.attendance.passkey.log</field>
+            <field name="arch" type="xml">
+                <tree string="Passkey Audit Logs"
+                      decoration-success="status == 'success'"
+                      decoration-danger="status == 'failed'">
+                    <field name="event_datetime"/>
+                    <field name="employee_id"/>
+                    <field name="attendance_id"/>
+                    <field name="action"/>
+                    <field name="status"/>
+                    <field name="device_name" string="Device"/>
+                    <field name="browser"/>
+                    <field name="operating_system" string="OS"/>
+                    <field name="city"/>
+                    <field name="country"/>
+                    <field name="ip_address" string="IP"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_attendance_passkey_log_form" model="ir.ui.view">
+            <field name="name">hr.attendance.passkey.log.form</field>
+            <field name="model">hr.attendance.passkey.log</field>
+            <field name="arch" type="xml">
+                <form string="Passkey Audit Log">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="event_datetime"/>
+                                <field name="status"/>
+                                <field name="action"/>
+                                <field name="authentication_method"/>
+                                <field name="attendance_id"/>
+                                <field name="employee_id"/>
+                            </group>
+                            <group>
+                                <field name="credential_id"/>
+                                <field name="authenticator_type"/>
+                                <field name="session_id"/>
+                                <field name="ip_address"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Device">
+                                <group>
+                                    <field name="device_name"/>
+                                    <field name="device_type"/>
+                                    <field name="browser"/>
+                                    <field name="browser_version"/>
+                                    <field name="operating_system"/>
+                                    <field name="operating_system_version"/>
+                                    <field name="user_agent" nolabel="1" widget="text"/>
+                                </group>
+                            </page>
+                            <page string="Location">
+                                <group>
+                                    <field name="location_name"/>
+                                    <field name="city"/>
+                                    <field name="country"/>
+                                    <group>
+                                        <field name="latitude"/>
+                                        <field name="longitude"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes" nolabel="1" widget="text"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_attendance_passkey_log_search" model="ir.ui.view">
+            <field name="name">hr.attendance.passkey.log.search</field>
+            <field name="model">hr.attendance.passkey.log</field>
+            <field name="arch" type="xml">
+                <search string="Passkey Audit Logs">
+                    <field name="employee_id"/>
+                    <field name="attendance_id"/>
+                    <filter name="status_success" string="Success" domain="[('status', '=', 'success')]"/>
+                    <filter name="status_failed" string="Failed" domain="[('status', '=', 'failed')]"/>
+                    <filter name="action_check_in" string="Check In" domain="[('action', '=', 'check_in')]"/>
+                    <filter name="action_check_out" string="Check Out" domain="[('action', '=', 'check_out')]"/>
+                    <filter name="today" string="Today" domain="[('event_datetime', '&gt;=', context_today())]"/>
+                    <filter name="this_week" string="This Week"
+                            domain="[('event_datetime', '&gt;=', context_today() - relativedelta(days=context_today().weekday()))]"/>
+                    <filter name="this_month" string="This Month"
+                            domain="[('event_datetime', '&gt;=', context_today().replace(day=1))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="Action" name="group_action" context="{'group_by': 'action'}"/>
+                        <filter string="Country" name="group_country" context="{'group_by': 'country'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_attendance_passkey_log_action" model="ir.actions.act_window">
+            <field name="name">Passkey Audit Logs</field>
+            <field name="res_model">hr.attendance.passkey.log</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="search_view_id" ref="hr_attendance_passkey.hr_attendance_passkey_log_search"/>
+            <field name="context">{"search_default_today": 1}</field>
+        </record>
+
+        <menuitem id="hr_attendance_passkey_log_menu"
+                  name="Passkey Audit Logs"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  action="hr_attendance_passkey.hr_attendance_passkey_log_action"
+                  sequence="45"/>
+    </data>
+</odoo>

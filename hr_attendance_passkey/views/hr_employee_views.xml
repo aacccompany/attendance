@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add a Passkeys tab to the HR Employee form -->
+    <record id="view_hr_employee_passkey_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.passkey.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_passkey_logs"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-key">
+                    <field name="passkey_log_count" widget="statinfo" string="Passkey Logs"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Passkeys" name="passkeys">
+                    <field name="passkey_ids"
+                           nolabel="1"
+                           context="{'default_employee_id': id}">
+                        <list editable="bottom">
+                            <field name="device_name"
+                                   placeholder="e.g. Work Laptop — Chrome"/>
+                            <field name="sign_count" readonly="1"/>
+                            <field name="registered_at" readonly="1"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </list>
+                    </field>
+                    <button name="action_register_passkey"
+                            string="Register Passkey on This Device"
+                            type="object"
+                            class="btn btn-primary mt-2"
+                            icon="fa-plus-circle"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

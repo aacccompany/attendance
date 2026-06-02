@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_passkey_manager,hr.employee.passkey manager,model_hr_employee_passkey,hr_attendance.group_hr_attendance_manager,1,1,1,1
+access_hr_employee_passkey_user,hr.employee.passkey user,model_hr_employee_passkey,base.group_user,1,0,0,0
+access_hr_attendance_passkey_log_manager,hr.attendance.passkey.log manager,model_hr_attendance_passkey_log,hr_attendance.group_hr_attendance_manager,1,1,1,1
+access_hr_attendance_passkey_log_hr_user,hr.attendance.passkey.log hr user,model_hr_attendance_passkey_log,hr_attendance.group_hr_attendance_user,1,0,0,0

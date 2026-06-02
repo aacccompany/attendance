@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance_passkey.PasskeyRegisterWizard">
+    <div class="passkey-register-wizard p-4 d-flex flex-column align-items-center gap-3"
+         style="min-width: 360px;">
+
+        <h5 class="m-0 fw-semibold text-primary">
+            <i class="fa fa-key me-2"/>Register Passkey
+        </h5>
+        <p class="text-muted small mb-0 text-center">
+            Registering for: <strong t-esc="employeeName"/>
+        </p>
+
+        <!-- Device name input -->
+        <div class="w-100" t-if="state.phase === 'idle' or state.phase === 'error'">
+            <label class="form-label small fw-semibold">Device / Authenticator Name</label>
+            <input type="text"
+                   class="form-control"
+                   placeholder="e.g. Work Laptop – Chrome"
+                   t-model="state.deviceName"/>
+        </div>
+
+        <!-- Status messages -->
+        <div t-if="state.message"
+             t-attf-class="alert w-100 mb-0 py-2 small
+                 {{ state.phase === 'error' ? 'alert-danger' :
+                    state.phase === 'success' ? 'alert-success' : 'alert-info' }}">
+            <t t-if="state.phase === 'registering'">
+                <i class="fa fa-spinner fa-spin me-2"/>
+            </t>
+            <t t-esc="state.message"/>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 w-100">
+            <t t-if="state.phase === 'idle'">
+                <button class="btn btn-primary flex-grow-1" t-on-click="onRegister">
+                    <i class="fa fa-plus me-1"/>Register
+                </button>
+                <button class="btn btn-outline-secondary" t-on-click="onClose">Cancel</button>
+            </t>
+
+            <t t-if="state.phase === 'registering'">
+                <button class="btn btn-secondary flex-grow-1" disabled="disabled">
+                    <i class="fa fa-spinner fa-spin me-1"/>Waiting…
+                </button>
+            </t>
+
+            <t t-if="state.phase === 'error'">
+                <button class="btn btn-warning flex-grow-1" t-on-click="onRetry">
+                    <i class="fa fa-redo me-1"/>Retry
+                </button>
+                <button class="btn btn-outline-secondary" t-on-click="onClose">Close</button>
+            </t>
+
+            <t t-if="state.phase === 'success'">
+                <button class="btn btn-success flex-grow-1" t-on-click="onClose">
+                    <i class="fa fa-check me-1"/>Done
+                </button>
+            </t>
+        </div>
+
+    </div>
+</t>
+
+</templates>

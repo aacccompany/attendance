@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="hr_attendance.public_kiosk_app" t-inherit-mode="extension">
+
+    <xpath expr="//div[hasclass('o_hr_kiosk_mode_bottom')]//button[1]" position="replace">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <button t-on-click="() => this.switchDisplay('manual')" class="btn btn-light btn-lg rounded-3">
+                <i class="fa fa-user-o me-2"/>
+                <span>Identify Manually</span>
+            </button>
+            <button class="btn btn-light btn-lg rounded-3 passkey-kiosk-btn"
+                    t-on-click="onPasskeyClick"
+                    t-att-disabled="passkeyState.loading">
+                <t t-if="passkeyState.loading">
+                    <i class="fa fa-spinner fa-spin me-2"/>กำลังยืนยัน…
+                </t>
+                <t t-else="">
+                    <i class="fa fa-key me-2"/>Passkey
+                </t>
+            </button>
+        </div>
+    </xpath>
+
+</t>
+
+</templates>

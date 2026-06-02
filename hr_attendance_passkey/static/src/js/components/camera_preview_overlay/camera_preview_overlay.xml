@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance_passkey.CameraPreviewOverlay">
+
+    <!-- Full-screen overlay using Odoo's own kiosk background class -->
+    <div class="passkey-overlay position-fixed top-0 start-0 w-100 h-100
+                o_attendance_background d-flex flex-column"
+         style="z-index: 1055;">
+
+        <!-- Top bar — back button aligned right like other kiosk screens -->
+        <div class="p-3 d-flex justify-content-end">
+            <button class="o_hr_attendance_back_button btn btn-secondary rounded-pill"
+                    t-on-click="onClose">
+                <i class="oi oi-chevron-left" role="img" aria-label="Cancel"/>
+            </button>
+        </div>
+
+        <!-- Main card — same structure as greetings / pin screens -->
+        <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
+            <div class="o_hr_attendance_kiosk_card card rounded-3">
+                <div class="card-body rounded-3 p-0">
+                    <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column align-items-center justify-content-center">
+
+                        <!-- Card main: camera circle + status -->
+                        <div class="o_hr_attendance_kiosk_card_main p-3 mx-3 mx-xl-0 text-center">
+
+                            <h5 class="text-muted mt-2 mb-3">
+                                <i class="fa fa-camera me-2"/>แสกนหน้า
+                            </h5>
+
+                            <!-- Circular camera preview -->
+                            <div class="passkey-camera-wrap mx-auto mb-3">
+                                <video t-ref="video"
+                                       autoplay="autoplay"
+                                       muted="muted"
+                                       playsinline="playsinline"/>
+                                <canvas t-ref="canvas" class="d-none"/>
+
+                                <!-- Face guide -->
+                                <div class="passkey-face-guide"/>
+
+                                <!-- Starting -->
+                                <t t-if="state.phase === 'starting'">
+                                    <div class="passkey-phase-overlay">
+                                        <i class="fa fa-spinner fa-spin fa-2x text-white mb-2"/>
+                                        <span class="text-white small">กำลังเปิดกล้อง…</span>
+                                    </div>
+                                </t>
+
+                                <!-- Authenticating -->
+                                <t t-if="state.phase === 'authenticating'">
+                                    <div class="passkey-phase-overlay passkey-phase-scanning">
+                                        <div class="passkey-scan-ring"/>
+                                        <i class="fa fa-key fa-2x text-white mb-2"/>
+                                        <span class="text-white small">รอยืนยัน Keypass…</span>
+                                    </div>
+                                </t>
+
+                                <!-- Success -->
+                                <t t-if="state.phase === 'success'">
+                                    <div class="passkey-phase-overlay passkey-phase-success">
+                                        <i class="fa fa-check-circle fa-3x text-white mb-2"/>
+                                        <span class="text-white fw-semibold" t-esc="state.message"/>
+                                    </div>
+                                </t>
+
+                                <!-- Error -->
+                                <t t-if="state.phase === 'error'">
+                                    <div class="passkey-phase-overlay passkey-phase-error">
+                                        <i class="fa fa-exclamation-circle fa-2x text-white mb-2"/>
+                                        <span class="text-white small text-center px-3" t-esc="state.message"/>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <!-- Status text -->
+                            <p class="text-muted small mb-0" t-esc="state.statusText"/>
+
+                        </div>
+
+                        <!-- Card bottom: action buttons -->
+                        <div class="o_hr_attendance_kiosk_card_bottom d-flex flex-column align-items-center w-100 gap-2 p-3">
+
+                            <t t-if="state.phase === 'idle'">
+                                <button class="btn btn-primary btn-lg rounded-pill px-5"
+                                        t-on-click="onStartClick">
+                                    <i class="fa fa-camera me-2"/>เปิดกล้อง
+                                </button>
+                            </t>
+
+                            <t t-if="state.phase === 'ready'">
+                                <button class="btn btn-primary btn-lg rounded-pill px-5 w-100"
+                                        t-on-click="onFaceScanClick">
+                                    <i class="fa fa-camera me-2"/>แสกนหน้า
+                                </button>
+                                <button class="btn btn-outline-secondary btn-md rounded-pill px-4"
+                                        t-on-click="onAuthenticateClick">
+                                    <i class="fa fa-key me-2"/>เข้างาน (Keypass)
+                                </button>
+                            </t>
+
+                            <t t-if="state.phase === 'authenticating'">
+                                <button class="btn btn-primary btn-lg rounded-pill px-5"
+                                        disabled="disabled">
+                                    <i class="fa fa-spinner fa-spin me-2"/>กำลังยืนยัน…
+                                </button>
+                            </t>
+
+                            <t t-if="state.phase === 'error'">
+                                <button class="btn btn-primary btn-lg rounded-pill px-5"
+                                        t-on-click="onRetry">
+                                    <i class="fa fa-redo me-2"/>ลองอีกครั้ง
+                                </button>
+                            </t>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom bar — same as greetings screen -->
+        <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
+            <button class="btn btn-light btn-lg rounded-pill px-5"
+                    t-on-click="onClose">
+                ยกเลิก
+            </button>
+        </div>
+
+    </div>
+</t>
+
+</templates>
